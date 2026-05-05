@@ -106,14 +106,14 @@ fun SendToOfferView(
         topContent = {
             AmountHeroInput(
                 initialAmount = requestedAmount,
-                enabled = vm.state !is OfferState.FetchingInvoice,
+                canEditAmount = vm.state !is OfferState.FetchingInvoice,
                 onAmountChange = { newAmount ->
                     if (newAmount?.amount != amount) vm.state = OfferState.Init
                     amount = newAmount?.amount
                 },
                 validationErrorMessage = amountErrorMessage,
                 inputTextSize = 42.sp,
-                canTip = requestedAmount != null && isOverpaymentEnabled,
+                canTip = requestedAmount != null,
                 canSendLNBalance = requestedAmount == null,
             )
         }

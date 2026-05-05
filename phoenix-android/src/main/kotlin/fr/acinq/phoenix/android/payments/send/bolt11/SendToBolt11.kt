@@ -95,14 +95,14 @@ fun SendToBolt11View(
         topContent = {
             AmountHeroInput(
                 initialAmount = requestedAmount,
-                enabled = requestedAmount == null || isOverpaymentEnabled,
+                canEditAmount = requestedAmount == null || isOverpaymentEnabled,
                 onAmountChange = {
                     amount = it?.amount
                 },
                 validationErrorMessage = amountErrorMessage,
                 inputTextSize = 42.sp,
-                canTip = requestedAmount != null && isOverpaymentEnabled,
                 canSendLNBalance = requestedAmount == null,
+                canTip = requestedAmount != null,
             )
         }
     ) {

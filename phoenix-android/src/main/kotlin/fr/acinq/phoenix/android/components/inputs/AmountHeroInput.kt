@@ -76,6 +76,7 @@ import fr.acinq.phoenix.android.LocalBusiness
 import fr.acinq.phoenix.android.LocalExchangeRatesMap
 import fr.acinq.phoenix.android.LocalFiatCurrencies
 import fr.acinq.phoenix.android.R
+import fr.acinq.phoenix.android.components.HSeparator
 import fr.acinq.phoenix.android.components.buttons.BorderButton
 import fr.acinq.phoenix.android.components.buttons.Button
 import fr.acinq.phoenix.android.utils.borderColor
@@ -107,9 +108,9 @@ fun AmountHeroInput(
     inputModifier: Modifier = Modifier,
     dropdownModifier: Modifier = Modifier,
     inputTextSize: TextUnit = 16.sp,
-    enabled: Boolean = true,
-    canTip: Boolean = false,
-    canSendLNBalance: Boolean = false,
+    canEditAmount: Boolean,
+    canTip: Boolean,
+    canSendLNBalance: Boolean,
 ) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -192,7 +193,6 @@ fun AmountHeroInput(
                     is AmountConversionResult.Error.AmountNegative -> context.getString(R.string.send_error_amount_negative)
                 }
             }
-
             null -> {
                 inputValueInMsat = null
                 inputValueConvertedToAlt = ""
@@ -227,7 +227,7 @@ fun AmountHeroInput(
             ),
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus(); keyboardController?.hide() }),
             singleLine = true,
-            enabled = enabled,
+            enabled = canEditAmount,
             cursorBrush = SolidColor(MaterialTheme.colors.primary.copy(alpha = 0.7f))
         )
     }
@@ -256,15 +256,17 @@ fun AmountHeroInput(
             canAddMoreUnits = true,
             onDismiss = { },
             modifier = dropdownModifier,
-            enabled = enabled,
+            enabled = true,
             otherItems = if (canSendLNBalance) {
                 {
                     val peerManager = LocalBusiness.current?.peerManager
                     val scope = rememberCoroutineScope()
                     Spacer(Modifier.height(8.dp))
+                    HSeparator()
+                    Spacer(Modifier.height(8.dp))
                     Box(modifier = Modifier.padding(horizontal = 8.dp)) {
                         BorderButton(
-                            text = "Use all balance",
+                            text = stringResource(R.string.send_balance_use_all),
                             icon = R.drawable.ic_arrow_to_end,
                             onClick = {
                                 scope.launch {

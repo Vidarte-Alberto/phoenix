@@ -130,7 +130,7 @@ fun UnitDropdown(
                 Box(modifier = Modifier.padding(horizontal = 8.dp)) {
                     BorderButton(
                         text = stringResource(R.string.unitdropdown_more),
-                        icon = R.drawable.ic_plus_circle,
+                        icon = R.drawable.ic_settings,
                         onClick = { showAddCurrencyDialog = true ; expanded = false },
                         modifier = Modifier.fillMaxSize(),
                         borderColor = borderColor,
