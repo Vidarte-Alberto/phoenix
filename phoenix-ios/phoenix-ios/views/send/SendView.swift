@@ -76,6 +76,7 @@ struct SendView: View {
 	@StateObject var toast = Toast()
 	
 	@Environment(\.colorScheme) var colorScheme: ColorScheme
+	@Environment(\.dynamicTypeSize) var dynamicTypeSize: DynamicTypeSize
 	@Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 	
 	@EnvironmentObject var navCoordinator: NavigationCoordinator
@@ -236,11 +237,17 @@ struct SendView: View {
 	
 	@ViewBuilder
 	func footer() -> some View {
-		
-		ViewThatFits {
-			footer_standard()
-			footer_compact()
-			footer_accessibility()
+
+		Group {
+			if dynamicTypeSize.isAccessibilitySize {
+				footer_accessibility()
+			} else {
+				ViewThatFits {
+					footer_standard()
+					footer_compact()
+					footer_accessibility()
+				}
+			}
 		}
 		.assignMaxPreference(for: maxButtonWidthReader.key, to: $maxButtonWidth)
 		.background(
@@ -295,33 +302,22 @@ struct SendView: View {
 	
 	@ViewBuilder
 	func footer_accessibility() -> some View {
-		
+
 		VStack(alignment: HorizontalAlignment.center, spacing: 20) {
-			HStack(alignment: VerticalAlignment.top, spacing: 0) {
-				Spacer()
+			HStack(alignment: VerticalAlignment.top, spacing: 24) {
 				labelButton_paste()
-					.frame(width: maxButtonWidth, alignment: .leading)
-					.read(maxButtonWidthReader)
-				Spacer()
-				Spacer()
+					.frame(maxWidth: .infinity, alignment: .leading)
 				labelButton_scanQrCode()
-					.frame(width: maxButtonWidth, alignment: .leading)
-					.read(maxButtonWidthReader)
-				Spacer()
+					.frame(maxWidth: .infinity, alignment: .leading)
 			}
-			HStack(alignment: VerticalAlignment.top, spacing: 0) {
-				Spacer()
+			HStack(alignment: VerticalAlignment.top, spacing: 24) {
 				labelButton_chooseImage()
-					.frame(width: maxButtonWidth, alignment: .leading)
-					.read(maxButtonWidthReader)
-				Spacer()
-				Spacer()
+					.frame(maxWidth: .infinity, alignment: .leading)
 				labelButton_nfc()
-					.frame(width: maxButtonWidth, alignment: .leading)
-					.read(maxButtonWidthReader)
-				Spacer()
+					.frame(maxWidth: .infinity, alignment: .leading)
 			}
 		}
+		.padding(.horizontal, 20)
 		.padding(.top, 10)
 		.padding(.bottom, deviceInfo.isFaceID ? 10 : 20)
 	}
